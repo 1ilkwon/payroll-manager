@@ -192,7 +192,7 @@ export default function SheetPage() {
 
   // Get display rows (sorted + filtered)
   const getDisplayRows = useCallback(() => {
-    let display = rows.map((r, i) => ({ ...r, __origIdx: i }));
+    let display: Record<string, any>[] = rows.map((r, i) => ({ ...r, __origIdx: i }));
 
     // Filter
     if (searchQuery.trim()) {

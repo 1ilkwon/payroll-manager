@@ -32,9 +32,9 @@ export async function POST(req: NextRequest) {
     const file = formData.get("file") as File;
     if (!file) return NextResponse.json({ error: "No file" }, { status: 400 });
 
-    const buffer = Buffer.from(await file.arrayBuffer());
+    const arrayBuf = await file.arrayBuffer();
     const workbook = new ExcelJS.Workbook();
-    await workbook.xlsx.load(buffer);
+    await workbook.xlsx.load(arrayBuf as any);
 
     const worksheet = workbook.worksheets[0];
     if (!worksheet) {
