@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  loginId   String   @unique
+  password  String
+  role      String   @default("user") // "admin" | "user"
+  createdAt DateTime @default(now())
+}
+
+model Paysheet {
+  id        String   @id @default(cuid())
+  name      String
+  columns   String   // JSON: [{ key, label, type }]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  rows      PayrollRow[]
+}
+
+model PayrollRow {
+  id         String   @id @default(cuid())
+  paysheetId String
+  data       String   // JSON: { [columnKey]: value }
+  rowOrder   Int      @default(0)
+  paysheet   Paysheet @relation(fields: [paysheetId], references: [id], onDelete: Cascade)
+}

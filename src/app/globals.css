@@ -1,0 +1,276 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #f0f0f0;
+  color: #1a1a1a;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar { width: 14px; height: 14px; }
+::-webkit-scrollbar-track { background: #f0f0f0; }
+::-webkit-scrollbar-thumb { background: #c0c0c0; border: 3px solid #f0f0f0; border-radius: 7px; }
+::-webkit-scrollbar-thumb:hover { background: #a0a0a0; }
+::-webkit-scrollbar-corner { background: #f0f0f0; }
+
+/* ==============================
+   SPREADSHEET - Excel-like
+   ============================== */
+.spreadsheet-wrap {
+  position: relative;
+  overflow: auto;
+  flex: 1;
+  background: white;
+}
+
+.spreadsheet {
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 13px;
+  color: #1a1a1a;
+}
+
+.spreadsheet th,
+.spreadsheet td {
+  border-right: 1px solid #d4d4d4;
+  border-bottom: 1px solid #d4d4d4;
+  padding: 0;
+  white-space: nowrap;
+  position: relative;
+}
+
+/* ---------- Row number & checkbox col ---------- */
+.spreadsheet .row-num {
+  background: #f3f3f3;
+  color: #666;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  user-select: none;
+  border-right: 1px solid #c8c8c8;
+}
+
+.spreadsheet .chk-col {
+  width: 32px;
+  min-width: 32px;
+  max-width: 32px;
+  background: #f3f3f3;
+  text-align: center;
+  user-select: none;
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  border-right: 1px solid #c8c8c8;
+}
+
+.spreadsheet .row-num-col {
+  width: 44px;
+  min-width: 44px;
+  max-width: 44px;
+  background: #f3f3f3;
+  color: #666;
+  text-align: center;
+  font-size: 12px;
+  user-select: none;
+  position: sticky;
+  left: 32px;
+  z-index: 2;
+  border-right: 1px solid #c8c8c8;
+}
+
+/* ---------- Header ---------- */
+.spreadsheet thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.spreadsheet thead th {
+  background: #f3f3f3;
+  color: #333;
+  font-weight: 600;
+  font-size: 13px;
+  height: 26px;
+  border-bottom: 1px solid #b0b0b0;
+  user-select: none;
+}
+
+.spreadsheet thead th.chk-col {
+  z-index: 12;
+}
+
+.spreadsheet thead th.row-num-col {
+  z-index: 11;
+  left: 32px;
+}
+
+/* Header cell content */
+.col-header {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 2px 0 8px;
+  gap: 2px;
+}
+
+.col-header-label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  color: #333;
+  font-weight: 600;
+}
+
+.col-header-btn {
+  opacity: 0;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+  color: #999;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+.col-header-btn:hover { color: #e53e3e; background: #fee; }
+th:hover .col-header-btn { opacity: 1; }
+
+/* Resize handle */
+.resize-handle {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  cursor: col-resize;
+  z-index: 4;
+}
+.resize-handle:hover,
+.resize-handle.active {
+  background: #2563eb;
+}
+
+/* ---------- Body cells ---------- */
+.spreadsheet tbody td {
+  height: 26px;
+  background: white;
+}
+
+.spreadsheet tbody td input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  padding: 0 6px;
+  font-size: 13px;
+  font-family: inherit;
+  background: transparent;
+  color: #1a1a1a;
+}
+
+/* ---------- Row hover ---------- */
+.spreadsheet tbody tr:hover td {
+  background: #f5f8ff;
+}
+.spreadsheet tbody tr:hover .chk-col,
+.spreadsheet tbody tr:hover .row-num-col {
+  background: #e8edf5;
+}
+
+/* ---------- Selected row (clicked) ---------- */
+.spreadsheet tbody tr.row-active td {
+  background: #e8f0fe;
+}
+.spreadsheet tbody tr.row-active .chk-col,
+.spreadsheet tbody tr.row-active .row-num-col {
+  background: #d0ddf5;
+  color: #1a56db;
+  font-weight: 700;
+}
+
+/* ---------- Checkbox-selected row ---------- */
+.spreadsheet tbody tr.row-checked td {
+  background: #ebf5ff;
+}
+.spreadsheet tbody tr.row-checked .chk-col,
+.spreadsheet tbody tr.row-checked .row-num-col {
+  background: #d8e8fb;
+}
+
+/* ---------- Active cell ---------- */
+.spreadsheet tbody td.active-cell {
+  outline: 2px solid #1a56db;
+  outline-offset: -1px;
+  z-index: 1;
+}
+.spreadsheet tbody td.active-cell input {
+  background: white;
+}
+
+/* ---------- Add col button ---------- */
+.add-col-th {
+  width: 36px;
+  min-width: 36px;
+  background: #f3f3f3 !important;
+  cursor: pointer;
+  color: #999;
+  transition: all 0.1s;
+}
+.add-col-th:hover {
+  background: #e0e0e0 !important;
+  color: #2563eb;
+}
+
+/* Column header editing */
+.col-edit-input {
+  width: 100%;
+  height: 100%;
+  border: 2px solid #2563eb;
+  outline: none;
+  background: white;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 0 6px;
+  color: #1a1a1a;
+}
+
+/* ---------- Add-row row ---------- */
+.spreadsheet tbody tr.add-row td {
+  background: #fafafa;
+  cursor: pointer;
+  height: 24px;
+}
+.spreadsheet tbody tr.add-row:hover td {
+  background: #f0f4ff;
+}
+
+/* ---------- Footer ---------- */
+.sheet-footer {
+  height: 24px;
+  background: #f3f3f3;
+  border-top: 1px solid #b0b0b0;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  font-size: 12px;
+  color: #555;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+/* ---------- Sort indicator ---------- */
+.sort-arrow {
+  display: inline-block;
+  margin-left: 3px;
+  font-size: 9px;
+  color: #2563eb;
+  font-weight: 700;
+}
